@@ -47,12 +47,13 @@ class Storage(BaseStorage):
     @tornado.gen.coroutine
     def exists(self, path):
         with (yield Storage.pool.connected_client()) as client:
-            raise tornado.gen.Return(client.call('EXISTS', path))
+            exists = yield client.call('EXISTS', path)
+            raise tornado.gen.Return(exists)
 
     @tornado.gen.coroutine
     def remove(self, path):
         with (yield Storage.pool.connected_client()) as client:
-            raise tornado.gen.Return(client.call('DEL', path))
+            yield client.call('DEL', path)
 
     @tornado.gen.coroutine
     def get(self, path):
