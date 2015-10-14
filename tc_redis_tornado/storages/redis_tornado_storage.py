@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+# Licensed under the MIT license:
+# http://www.opensource.org/licenses/mit-license
+# Copyright (c) 2015 Thumbor Community
+
 import tornadis
 import tornado
 from thumbor.storages import BaseStorage
