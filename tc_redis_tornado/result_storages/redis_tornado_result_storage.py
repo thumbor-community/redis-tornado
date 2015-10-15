@@ -44,7 +44,7 @@ class Storage(BaseStorage):
                 port=self.context.config.REDIS_RESULT_STORAGE_SERVER_PORT,
                 host=self.context.config.REDIS_RESULT_STORAGE_SERVER_HOST,
                 # db=self.context.config.REDIS_RESULT_STORAGE_SERVER_DB,
-                # password=self.context.config.REDIS_RESULT_STORAGE_SERVER_PASSWORD
+                password=self.context.config.REDIS_RESULT_STORAGE_SERVER_PASSWORD
             )
 
         if not Storage.start_time:
