@@ -35,7 +35,7 @@ class Storage(BaseStorage):
                 port=self.context.config.REDIS_STORAGE_SERVER_PORT,
                 host=self.context.config.REDIS_STORAGE_SERVER_HOST,
                 # db=self.context.config.REDIS_STORAGE_SERVER_DB,
-                # password=self.context.config.REDIS_STORAGE_SERVER_PASSWORD
+                password=self.context.config.REDIS_STORAGE_SERVER_PASSWORD
             )
 
     @tornado.gen.coroutine
@@ -64,3 +64,24 @@ class Storage(BaseStorage):
         with (yield Storage.pool.connected_client()) as client:
             buffer = yield client.call('GET', path)
             raise tornado.gen.Return(buffer)
+
+    @tornado.gen.coroutine
+    def put_crypto(self, path):
+        if not self.context.config.STORES_CRYPTO_KEY_FOR_EACH_IMAGE:
+            return
+
+        if not self.context.server.security_key:
+            raise RuntimeError(
+                "STORES_CRYPTO_KEY_FOR_EACH_IMAGE can't be True if no "
+                "SECURITY_KEY specified"
+            )
+
+        key = self.__key_for(path)
+        with (yield Storage.pool.connected_client()) as client:
+            yield client.call('SET', key, self.context.server.security_key)
+
+    def __key_for(self, url):
+        return 'thumbor-crypto-%s' % url
+
+    def __detector_key_for(self, url):
+        return 'thumbor-detector-%s' % url
